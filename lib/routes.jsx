@@ -7,3 +7,13 @@ FlowRouter.route('/',{
     });
   }
 });
+
+FlowRouter.route("/admin", {
+  name: "Admin",
+  action(params) {
+    ReactLayout.render(MainLayout, {
+      header:   <MainHeader />,
+      content:  <Admin />
+    })
+  }
+});

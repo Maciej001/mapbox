@@ -26,3 +26,5 @@ kadira:flow-router
 kadira:react-layout
 check
 audit-argument-checks
+http
+mdg:geolocation

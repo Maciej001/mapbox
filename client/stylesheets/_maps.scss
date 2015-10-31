@@ -1,4 +1,19 @@
 #main-map {
   width: 100%;
-  height: 400px;
+  height: 800px;
+}
+
+.my-icon {
+  border-radius: 100%;
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  line-height: 20px;
+  color: white;
+}
+.icon-dc {
+  background: #3ca0d3;
+}
+.icon-sf {
+  background: #63b6e5;
 }
