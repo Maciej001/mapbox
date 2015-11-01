@@ -91,6 +91,64 @@ L.marker([37.9, -77], {   // lat, lng
 }).addTo(map);
 ```
 
+## Meteor React Mapbox - simple markers
+```
+MainMap = React.createClass({
+
+  mixins: [ ReactMeteorData ],
+
+  getMeteorData() {
+
+    let stationsSub = Meteor.subscribe('stations');
+    return {
+      stations:         Stations.find().fetch(),
+      stationsLoaded:   stationsSub.ready()
+    }
+  },
+
+  componentDidMount() {
+    let self = this;
+    Mapbox.load();
+
+    Tracker.autorun(function () {
+      if (Mapbox.loaded()) {
+        L.mapbox.accessToken = ACCESS_TOKEN;
+        self.map = L.mapbox.map('main-map', 'mapbox.streets')
+                    .setView([51.517373, -0.088727], 16);
+      } 
+    });
+    
+  },
+
+  addMarkers() {     
+    let self = this;
+    Tracker.autorun(() => {
+      if ( Mapbox.loaded() ) {
+        _.each(this.data.stations, (station) => {
+
+          L.marker([station.lat, station.lng], {
+            icon: L.mapbox.marker.icon({
+              'marker-size': 'medium',
+              'marker-symbol': 'bicycle',
+              'marker-color': '#ac1a3b'
+            })
+          }).addTo(self.map);
+          
+        });
+      }
+    });
+  },
+
+  render() {
+    if ( this.data.stationsLoaded ) {
+      this.addMarkers();
+    }
+    return (
+      <div id="main-map"></div>
+    )
+  }
+})
+```
 
 
 

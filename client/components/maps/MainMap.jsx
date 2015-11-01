@@ -12,7 +12,6 @@ MainMap = React.createClass({
     }
   },
 
-
   componentDidMount() {
     let self = this;
     Mapbox.load();
@@ -29,65 +28,71 @@ MainMap = React.createClass({
     
   },
 
-  addMap() {     
-    let self = this;
-    Tracker.autorun(() => {
-      if ( Mapbox.loaded() ) {
-        _.each(this.data.stations, (station) => {
+  addMarkers() {
+    let self = this,
+        geoJsonMarkers = [],
+        markers = [];
 
-          L.marker([station.lat, station.lng], {
-            icon: L.mapbox.marker.icon({
-              'marker-size': 'medium',
-              'marker-symbol': 'bicycle',
-              'marker-color': '#ac1a3b'
-            })
-          }).addTo(self.map);
-        });
+    // Create markers
+    _.each(this.data.stations, (station) => {
+      let iconClass = 'bike-icon ';
+
+      let cssIcon = L.divIcon({
+        className: iconClass,
+        iconSize: [50,50],
+        html: 
+        '<div class="full-bikes">' +
+          '<span class="full-bikes-bikes">' + station.bikes + '</span>' + 
+          '<span class="full-bikes-docks">' + station.docks + '</span>' + 
+        '</div>'
+      });
+
+      let marker = L.marker([station.lat, station.lng], {icon: cssIcon});
+      
+      let chartWidth = 120;
+
+      let emptyWidth = Math.round(chartWidth * (station.empty/station.docks));
+  
+      if (emptyWidth < 20 && emptyWidth !== 0) {
+        emptyWidth = 20;
       }
-    });
-  },
 
-  geoJsonMarkers() {
-    let self = this;
-    let stations = this.data.stations;
+      let busyWidth  = chartWidth - emptyWidth;
+ 
+      if (busyWidth < 30 && busyWidth !== 0){
+        busyWidth = 30;
+        emptyWidth = chartWidth - busyWidth;
+      } 
 
-    let markers = []
+      let bikesLeft = 'Sorry, no bikes left';
 
-    let myLayer = L.mapbox.featureLayer().addTo(self.map);
+      if ( station.bikes > 0 ) { bikesLeft =  'Bikes: ' + station.bikes }; 
 
-    stations.forEach((station) => {
-      let marker = {
-        type: "Feature",
-        geometry: {
-          type: "Point",
-          "coordinates": [station.lat, station.lng]
-        },
-        properties: {
-          icon: {
-            className: "my-icon icon-dc",
-            html: "&#9733",
-            iconSize: null
-          }
-        }
-      }
+      marker.bindPopup(
+        '<div class="bikes-tooltips">' + 
+          '<p>' + bikesLeft + '</p>' + 
+          '<div class="bikes-tooltips-chart" style="width:' + chartWidth + 'px">' + 
+            '<div class="bikes-busy" style="width:' + busyWidth + 'px">' + 
+              '<i class="fa fa-bicycle"></i>' + 
+            '</div>' +
+            '<div class="bikes-empty" style="width:' + emptyWidth +'px">' + 
+              '<span>' + station.empty + '</span>' +
+            '</div>' + 
+          '</div>' + 
+        '</div>' 
+      );
 
       markers.push(marker);
+
     });
 
-    myLayer.on('layeradd', (e) => {
-      let marker = e.layer, 
-          feature = marker.feature;
-      marker.setIcon(L.divIcon(feature.properties.icon));
-    });
-
-    myLayer.setGeoJSON(markers);
-
+    let stationsGroup = L.featureGroup(markers).addTo(self.map);
 
   }, 
 
   render() {
     if ( this.data.stationsLoaded ) {
-      this.addMap();
+      this.addMarkers();
     }
     return (
       <div id="main-map"></div>
