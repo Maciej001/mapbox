@@ -1,0 +1,66 @@
+$nav-height: 50px;
+
+nav#main-header{
+  
+  width: 100%;
+  height: $nav-height;
+
+  margin-right: 0 !important;
+  padding: 0 20px;
+  
+  color: white;
+  background: $blue;
+}
+
+#brand-name {
+  h4 {
+    margin: 0;
+    line-height: $nav-height;
+  }
+}
+
+#weather-info {
+  font-size: 3rem;
+  height: $nav-height;
+  color: $very-light-blue;
+  i, h3, h4 {
+    display: inline-block;
+    line-height: $nav-height;
+  }
+
+  h3 {
+    margin: 0 0 0 10px;
+    font-size: 3rem;
+  }
+  
+  h4 {
+    font-size: 2rem;
+    padding-left: 20px;
+  }
+
+  #weather-info-center {
+    margin:  0 auto;
+  }
+}
+
+
+// Forecast Panel
+#forecast span{
+  float: right;
+  line-height: $nav-height;
+  font-size: 2rem;
+}
+
+#forecastPanel {
+  width: 100%;
+
+  background: $blue;
+  color: white;
+}
+
+#weather-description {
+  p {
+    font-size: 1.75rem;
+    color: $very-light-blue;
+  }
+}

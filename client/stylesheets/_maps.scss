@@ -2,6 +2,7 @@
 #main-map {
   width: 100%;
   height: 1100px;
+  overflow-y: hidden;
 }
 
 .my-icon {
@@ -38,6 +39,10 @@
   border-top:15px solid #2c3e50;
   }
 
+a .leaflet-container , a .leaflet-control-zoom-in{
+  background: $blue;
+  color: white !important;
+}
 
 .bike-icon {
   position: relative;
@@ -86,19 +91,25 @@
 
 .bikes-tooltips-chart {
   height: 30px;
-  background: $red;
+  background: $light-blue;
   text-align: center;
   
   .bikes-busy {
     display: inline-block;
     height: 100%;
-    background: $red;
+    background: $blue;
   }
 
   .bikes-empty {
     display: inline-block;
     height: 100%;
-    background: $green;
+    background: repeating-linear-gradient(
+      -45deg,
+      $blue,
+      $blue 5px,
+      $light-blue 5px,
+      $light-blue 10px
+    );
   }
 
   i.fa.fa-bicycle {
@@ -112,4 +123,40 @@
     line-height: 30px;
     font-size: 18px;
   }
+}
+
+// Tooltips
+
+.bikes-tooltips p {
+  color: white;
+}
+
+.leaflet-popup-content-wrapper, .map-legends, .map-tooltip {
+  background: $light-blue;
+  border-radius: 0;
+}
+
+.leaflet-popup-content-wrapper {
+  border: none;
+  padding: 0;
+  border-radius: 0 !important;
+  box-shadow: -5px 5px 30px #999 !important;
+  background: $light-blue !important;
+}
+
+.leaflet-popup-content {
+  background: $light-blue;
+  border: 0;
+}
+
+a.leaflet-popup-close-button {
+  color: $very-light-blue !important;
+  background: $light-blue !important;
+  &:hover {
+    color: white !important;
+  }
+}
+
+.leaflet-popup-tip {
+  border-top: 10px solid $light-blue !important;
 }

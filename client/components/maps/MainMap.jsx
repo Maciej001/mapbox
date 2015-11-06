@@ -4,7 +4,7 @@ MainMap = React.createClass({
 
   getMeteorData() {
 
-    let stationsSub = Meteor.subscribe('stations');
+    let stationsSub   = Meteor.subscribe('stations');
 
     return {
       stations:         Stations.find().fetch(),
@@ -35,26 +35,27 @@ MainMap = React.createClass({
 
     // Create markers
     _.each(this.data.stations, (station) => {
-      let iconClass = 'bike-icon ';
+      let iconClass = 'bike-icon ',
+          bikes = Number(station.bikes), 
+          empty = Number(station.empty), 
+          docks = Number(station.bikes) + Number(station.empty);
 
       let cssIcon = L.divIcon({
         className: iconClass,
         iconSize: [50,50],
         html: 
         '<div class="full-bikes">' +
-          '<span class="full-bikes-bikes">' + station.bikes + '</span>' + 
-          '<span class="full-bikes-docks">' + station.docks + '</span>' + 
+          '<span class="full-bikes-bikes">' + bikes + '</span>' + 
+          '<span class="full-bikes-docks">' + docks + '</span>' + 
         '</div>'
       });
 
-      let marker = L.marker([station.lat, station.lng], {icon: cssIcon});
-      
-      let chartWidth = 120;
-
-      let emptyWidth = Math.round(chartWidth * (station.empty/station.docks));
+      let marker = L.marker([station.lat, station.lng], {icon: cssIcon}),
+          chartWidth = 120,
+          emptyWidth = Math.round( chartWidth * ( empty / docks ));
   
       if (emptyWidth < 20 && emptyWidth !== 0) {
-        emptyWidth = 20;
+        emptyWidth = 20; 
       }
 
       let busyWidth  = chartWidth - emptyWidth;
@@ -64,9 +65,22 @@ MainMap = React.createClass({
         emptyWidth = chartWidth - busyWidth;
       } 
 
-      let bikesLeft = 'Sorry, no bikes left';
+      let bikesLeft = 'No bikes left';
 
-      if ( station.bikes > 0 ) { bikesLeft =  'Bikes: ' + station.bikes }; 
+      if ( bikes > 1)   { bikesLeft = bikes + ' bikes'}; 
+      if ( bikes === 1) { bikesLeft = bikes + ' bike'};
+
+
+      // If no bikes lef, don't add empty number to tolltip chart.
+      let emptyBikesHTML = "";
+
+      if (empty > 0) {
+        emptyBikesHTML = 
+          '<div class="bikes-empty" style="width:' + emptyWidth +'px">' + 
+            '<span>' + empty + '</span>' +
+          '</div>';
+      }
+      
 
       marker.bindPopup(
         '<div class="bikes-tooltips">' + 
@@ -75,11 +89,10 @@ MainMap = React.createClass({
             '<div class="bikes-busy" style="width:' + busyWidth + 'px">' + 
               '<i class="fa fa-bicycle"></i>' + 
             '</div>' +
-            '<div class="bikes-empty" style="width:' + emptyWidth +'px">' + 
-              '<span>' + station.empty + '</span>' +
-            '</div>' + 
+            emptyBikesHTML + 
           '</div>' + 
-        '</div>' 
+        '</div>',
+        { offset: new L.Point(0, -15)}
       );
 
       markers.push(marker);

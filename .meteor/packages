@@ -29,3 +29,7 @@ audit-argument-checks
 http
 mdg:geolocation
 pfafman:font-awesome-4
+russ:weather-icons
+maxharris9:classnames
+azfx:react-motion
+d3js:d3

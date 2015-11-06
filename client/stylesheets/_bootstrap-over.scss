@@ -1,9 +1,11 @@
 $bgDefault      : $blue;
 $bgHighlight    : $dark-blue;
 $colDefault     : #ecf0f1;
-$colHighlight       : $very-light-blue;
+$colHighlight   : white;
 .navbar {
   margin-bottom: 0;
+  border-radius: 0;
+  border: none;
 }
 .navbar-default {
   background-color: $bgDefault;
